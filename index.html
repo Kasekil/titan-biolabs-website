@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Titan Bio Labs | Research-Grade Peptides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #080D16;
+      --surface:    #0D1525;
+      --card:       #111D30;
+      --card-ho:    #162338;
+      --border:     #1C2D42;
+      --border-lt:  #253A52;
+      --blue:       #2563EB;
+      --blue-dim:   rgba(37,99,235,0.12);
+      --blue-glow:  rgba(37,99,235,0.20);
+      --text:       #E1E8F0;
+      --muted:      #5A7289;
+      --muted-lt:   #8099B3;
+      --green:      #10B981;
+      --r:          7px;
+      --r-lg:       14px;
+      --sh:         0 4px 20px rgba(0,0,0,.45);
+      --t:          .18s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',-apple-system,sans-serif;
+      font-size:15px;
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit;text-decoration:none}
+    ul{list-style:none}
+    img{display:block;max-width:100%}
+
+    /* ── Age Gate ──────────────────────────── */
+    #gate{
+      position:fixed;inset:0;z-index:9999;
+      background:rgba(5,9,18,.97);
+      display:flex;align-items:center;justify-content:center;padding:24px;
+    }
+    .gate-box{
+      background:var(--card);
+      border:1px solid var(--border-lt);
+      border-radius:var(--r-lg);
+      padding:48px 40px;
+      max-width:420px;width:100%;
+      text-align:center;
+    }
+    .gate-logo{margin:0 auto 28px;display:inline-block}
+    .gate-logo img{height:80px;width:auto}
+    .gate-box h2{font-size:19px;font-weight:700;margin-bottom:10px}
+    .gate-box p{font-size:13px;color:var(--muted-lt);margin-bottom:28px;line-height:1.6}
+    .gate-btns{display:flex;gap:10px}
+    .gate-yes{
+      flex:1;padding:13px;
+      background:var(--blue);color:#fff;
+      font-size:13px;font-weight:600;
+      border:none;border-radius:var(--r);cursor:pointer;
+      transition:background var(--t);
+    }
+    .gate-yes:hover{background:#1d4ed8}
+    .gate-no{
+      flex:1;padding:13px;
+      background:transparent;color:var(--muted-lt);
+      font-size:13px;font-weight:500;
+      border:1px solid var(--border-lt);border-radius:var(--r);cursor:pointer;
+      transition:var(--t);
+    }
+    .gate-no:hover{border-color:var(--muted);color:var(--text)}
+
+    /* ── Announcement ──────────────────────── */
+    .bar{
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      text-align:center;
+      font-size:12px;font-weight:500;
+      letter-spacing:.02em;color:var(--muted-lt);
+      padding:9px 16px;
+    }
+    .bar strong{color:var(--text)}
+    .bar span{margin:0 10px;opacity:.35}
+
+    /* ── Navigation ────────────────────────── */
+    nav{
+      position:sticky;top:0;z-index:100;
+      background:rgba(8,13,22,.96);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-wrap{
+      max-width:1200px;margin:0 auto;padding:0 32px;
+      display:flex;align-items:center;
+      justify-content:space-between;
+      height:70px;gap:32px;
+    }
+    .nav-logo-wrap{display:flex;align-items:center;flex-shrink:0}
+    .nav-logo-wrap img{height:44px;width:auto}
+    .nav-links{display:flex;align-items:center;gap:30px}
+    .nav-links a{
+      font-size:13px;font-weight:500;
+      color:var(--muted-lt);
+      transition:color var(--t);
+      letter-spacing:.01em;
+    }
+    .nav-links a:hover{color:var(--text)}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .nav-btn{
+      font-size:13px;font-weight:600;
+      background:var(--blue);color:#fff;
+      border:none;border-radius:var(--r);
+      padding:9px 20px;cursor:pointer;
+      transition:background var(--t);
+    }
+    .nav-btn:hover{background:#1d4ed8}
+    .cart-btn{
+      position:relative;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      padding:9px 14px;
+      display:flex;align-items:center;gap:7px;
+      font-size:13px;font-weight:500;
+      color:var(--muted-lt);
+      cursor:pointer;
+      transition:var(--t);
+    }
+    .cart-btn:hover{border-color:var(--border-lt);color:var(--text)}
+    .cart-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .cart-count{
+      position:absolute;
+      top:-7px;right:-7px;
+      background:var(--blue);color:#fff;
+      font-size:10px;font-weight:700;
+      width:18px;height:18px;
+      border-radius:50%;
+      display:none;
+      align-items:center;justify-content:center;
+      border:2px solid var(--bg);
+    }
+
+    /* ── Add confirmation toast ────────────── */
+    #toast{
+      position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:#1e3a5f;color:#fff;
+      font-size:13px;font-weight:500;
+      padding:12px 22px;border-radius:var(--r);
+      border:1px solid rgba(37,99,235,.4);
+      opacity:0;transition:opacity .25s,transform .25s;
+      z-index:2000;pointer-events:none;white-space:nowrap;
+    }
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* ── Hero ──────────────────────────────── */
+    .hero{
+      min-height:90vh;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;
+      padding:80px 32px;
+      position:relative;overflow:hidden;
+    }
+    .hero::before{
+      content:'';
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%,rgba(37,99,235,.07) 0%,transparent 65%),
+        radial-gradient(ellipse 40% 50% at 20% 80%,rgba(37,99,235,.03) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .hero-logo-wrap{position:relative;z-index:1;margin-bottom:40px}
+    .hero-logo-wrap img{height:160px;width:auto;display:block;margin:0 auto}
+    .hero-content{position:relative;z-index:1;max-width:720px}
+    .hero-label{
+      display:inline-block;
+      font-size:11px;font-weight:600;
+      letter-spacing:.12em;text-transform:uppercase;
+      color:#93c5fd;
+      background:rgba(147,197,253,.08);
+      border:1px solid rgba(147,197,253,.15);
+      border-radius:4px;padding:4px 12px;
+      margin-bottom:22px;
+    }
+    .hero h1{
+      font-size:clamp(30px,4vw,52px);
+      font-weight:800;
+      line-height:1.12;
+      letter-spacing:-.025em;
+      color:#fff;
+      margin-bottom:20px;
+    }
+    .hero h1 em{font-style:normal;color:#93c5fd}
+    .hero-sub{
+      font-size:17px;
+      color:var(--muted-lt);
+      line-height:1.7;
+      margin-bottom:36px;
+      max-width:540px;
+      margin-left:auto;margin-right:auto;
+    }
+    .hero-btns{
+      display:flex;gap:12px;justify-content:center;
+      flex-wrap:wrap;margin-bottom:56px;
+    }
+    .btn-solid{
+      font-size:14px;font-weight:600;
+      background:var(--blue);color:#fff;
+      border:none;border-radius:var(--r);
+      padding:13px 28px;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+      transition:background var(--t),box-shadow var(--t);
+    }
+    .btn-solid:hover{background:#1d4ed8;box-shadow:0 0 28px var(--blue-glow)}
+    .btn-ghost{
+      font-size:14px;font-weight:500;
+      background:transparent;color:var(--muted-lt);
+      border:1px solid var(--border-lt);border-radius:var(--r);
+      padding:13px 28px;cursor:pointer;
+      transition:var(--t);
+    }
+    .btn-ghost:hover{border-color:var(--muted);color:var(--text)}
+    .hero-stats{
+      display:flex;gap:0;
+      border:1px solid var(--border);
+      border-radius:var(--r-lg);
+      overflow:hidden;
+    }
+    .hstat{
+      padding:18px 32px;
+      border-right:1px solid var(--border);
+      text-align:center;
+      background:var(--surface);
+    }
+    .hstat:last-child{border-right:none}
+    .hstat-n{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
+    .hstat-n sup{font-size:13px}
+    .hstat-l{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+
+    /* ── Trust Strip ───────────────────────── */
+    .trust{
+      background:var(--surface);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+    .trust-grid{
+      max-width:1200px;margin:0 auto;padding:0 32px;
+      display:grid;grid-template-columns:repeat(4,1fr);
+    }
+    .ti{
+      display:flex;align-items:center;gap:14px;
+      padding:20px 24px;
+      border-right:1px solid var(--border);
+      transition:background var(--t);
+    }
+    .ti:last-child{border-right:none}
+    .ti:hover{background:rgba(37,99,235,.05)}
+    .ti-ico{
+      width:40px;height:40px;flex-shrink:0;
+      background:var(--blue-dim);
+      border:1px solid rgba(37,99,235,.2);
+      border-radius:var(--r);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .ti-ico svg{width:18px;height:18px;stroke:#93c5fd;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .ti strong{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2}
+    .ti span{font-size:11px;color:var(--muted)}
+
+    /* ── Page Layout ───────────────────────── */
+    .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+    .section{padding:80px 0}
+    .kicker{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd;margin-bottom:8px}
+    .h2{font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.15}
+
+    /* ── Category Tabs ─────────────────────── */
+    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px}
+    .tab{
+      font-size:12px;font-weight:500;
+      padding:7px 16px;
+      background:transparent;
+      color:var(--muted-lt);
+      border:1px solid var(--border);
+      border-radius:100px;cursor:pointer;
+      transition:var(--t);
+    }
+    .tab:hover{border-color:var(--border-lt);color:var(--text)}
+    .tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+    /* ── Product Grid ──────────────────────── */
+    .pgrid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+    }
+    .pc{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--r-lg);
+      overflow:hidden;
+      display:flex;flex-direction:column;
+      transition:var(--t);
+      cursor:pointer;
+    }
+    .pc:hover{
+      border-color:var(--border-lt);
+      background:var(--card-ho);
+      transform:translateY(-2px);
+      box-shadow:var(--sh);
+    }
+    .pc.off{display:none}
+    .pc-img{
+      background:#0a1525;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      aspect-ratio:4/3;
+      overflow:hidden;position:relative;
+    }
+    .pc-img img{
+      width:100%;height:100%;
+      object-fit:contain;padding:16px;
+      transition:transform .3s ease;
+    }
+    .pc:hover .pc-img img{transform:scale(1.05)}
+    .ph{
+      width:100%;height:100%;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(145deg,#0c1928 0%,#111e35 100%);
+    }
+    .ph svg{opacity:.15;width:36px;height:36px;stroke:#fff;fill:none;stroke-width:1.2}
+    .ph span{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+    .pc-bdg{
+      position:absolute;top:10px;left:10px;
+      font-size:10px;font-weight:600;
+      letter-spacing:.04em;text-transform:uppercase;
+      padding:3px 8px;border-radius:4px;
+    }
+    .bdg-new{background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.35);color:#93c5fd}
+    .bdg-bun{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+    .pc-body{padding:16px;flex:1;display:flex;flex-direction:column}
+    .pc-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;letter-spacing:-.01em}
+    .pc-dose{font-size:12px;font-weight:500;color:#93c5fd;margin-bottom:9px}
+    .pc-desc{font-size:12px;color:var(--muted-lt);line-height:1.55;flex:1;margin-bottom:14px}
+    .pc-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .pc-price{font-size:17px;font-weight:700;color:#fff}
+    .pc-price-alt{font-size:11px;color:var(--muted);font-weight:400;margin-top:1px}
+    .pc-acts{display:flex;gap:6px}
+    .bc{
+      font-size:11px;font-weight:600;
+      padding:7px 10px;
+      background:transparent;color:var(--muted-lt);
+      border:1px solid var(--border);border-radius:var(--r);
+      cursor:pointer;transition:var(--t);
+    }
+    .bc:hover{color:#93c5fd;border-color:rgba(37,99,235,.4)}
+    .ba{
+      font-size:11px;font-weight:600;
+      padding:7px 14px;
+      background:var(--blue);color:#fff;
+      border:none;border-radius:var(--r);cursor:pointer;
+      transition:background var(--t),transform .1s;
+    }
+    .ba:hover{background:#1d4ed8}
+    .ba:active{transform:scale(.96)}
+
+    /* ── Science ───────────────────────────── */
+    .sci-wrap{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .sci-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+    .sci-grid h2{font-size:34px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.1;margin-bottom:14px}
+    .sci-grid p{font-size:15px;color:var(--muted-lt);line-height:1.7;margin-bottom:32px}
+    .steps{display:flex;flex-direction:column;gap:20px}
+    .step{display:flex;gap:14px;align-items:flex-start}
+    .sn{
+      width:32px;height:32px;flex-shrink:0;
+      background:var(--blue);border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:700;color:#fff;
+    }
+    .step strong{display:block;font-size:13px;font-weight:600;color:#fff;margin-bottom:2px}
+    .step span{font-size:13px;color:var(--muted-lt)}
+    .sci-panel{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--r-lg);padding:32px;
+    }
+    .sp-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+    .pr{margin-bottom:18px}
+    .pr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+    .pr-top span{font-size:13px;color:var(--muted-lt)}
+    .pr-top strong{font-size:13px;font-weight:700;color:var(--green)}
+    .pr-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+    .pr-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),#34d399)}
+    .methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+    .method{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r);padding:12px;text-align:center;
+    }
+    .method strong{display:block;font-size:13px;font-weight:600;color:#fff}
+    .method span{font-size:11px;color:var(--muted)}
+
+    /* ── Why ───────────────────────────────── */
+    .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .wc{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--r-lg);padding:28px;transition:var(--t);
+    }
+    .wc:hover{border-color:var(--border-lt);background:var(--card-ho)}
+    .wi{
+      width:44px;height:44px;
+      background:var(--blue-dim);
+      border:1px solid rgba(37,99,235,.2);
+      border-radius:var(--r);
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:16px;
+    }
+    .wi svg{width:20px;height:20px;stroke:#93c5fd;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .wc h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+    .wc p{font-size:13px;color:var(--muted-lt);line-height:1.6}
+
+    /* ── COA ───────────────────────────────── */
+    .coa-block{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--r-lg);
+      padding:48px;margin-bottom:80px;
+      display:grid;grid-template-columns:1fr auto;
+      gap:48px;align-items:center;
+      position:relative;overflow:hidden;
+    }
+    .coa-block::after{
+      content:'';position:absolute;right:-60px;top:-60px;
+      width:300px;height:300px;
+      background:radial-gradient(circle,rgba(37,99,235,.06) 0%,transparent 70%);
+    }
+    .coa-block h2{font-size:28px;font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:10px}
+    .coa-block p{font-size:14px;color:var(--muted-lt);line-height:1.65;max-width:440px}
+    .coa-link{
+      display:inline-flex;align-items:center;gap:8px;
+      margin-top:24px;padding:11px 22px;
+      background:var(--blue);color:#fff;
+      font-size:13px;font-weight:600;
+      border-radius:var(--r);
+      transition:background var(--t);
+    }
+    .coa-link:hover{background:#1d4ed8}
+    .coa-nums{display:flex;gap:32px;position:relative;z-index:1}
+    .cn{text-align:center}
+    .cn-n{font-size:34px;font-weight:800;color:#93c5fd;line-height:1}
+    .cn-l{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
+
+    /* ── FAQ ───────────────────────────────── */
+    .faq{max-width:700px;margin:0 auto}
+    .fi{border-bottom:1px solid var(--border)}
+    .fq{
+      width:100%;text-align:left;background:none;border:none;
+      padding:20px 0;display:flex;justify-content:space-between;
+      align-items:center;gap:24px;cursor:pointer;
+      font-size:15px;font-weight:600;color:var(--text);
+      transition:color var(--t);
+    }
+    .fq:hover{color:#93c5fd}
+    .fic{color:var(--muted);font-size:20px;transition:transform var(--t),color var(--t);flex-shrink:0}
+    .fi.open .fic{transform:rotate(45deg);color:#93c5fd}
+    .fa{display:none;font-size:14px;color:var(--muted-lt);line-height:1.7;padding-bottom:20px}
+    .fi.open .fa{display:block}
+
+    /* ── Disclaimer ────────────────────────── */
+    .disc{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r);padding:20px 28px;margin-bottom:60px;
+    }
+    .disc p{font-size:11px;color:var(--muted);line-height:1.7}
+    .disc strong{color:var(--muted-lt)}
+
+    /* ── Footer ────────────────────────────── */
+    footer{background:var(--surface);border-top:1px solid var(--border);padding:64px 0 40px}
+    .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+    .foot-logo-wrap{display:inline-block;margin-bottom:16px}
+    .foot-logo-wrap img{height:44px;width:auto}
+    .foot-brand p{font-size:13px;color:var(--muted);line-height:1.65;max-width:260px;margin-bottom:20px}
+    .foot-socials{display:flex;gap:8px}
+    .fsoc{
+      width:34px;height:34px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--muted-lt);
+      transition:var(--t);
+    }
+    .fsoc:hover{border-color:var(--border-lt);color:var(--text);background:var(--card-ho)}
+    .fsoc svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .foot-col h4{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+    .foot-col ul{display:flex;flex-direction:column;gap:9px}
+    .foot-col ul li a{font-size:13px;color:var(--muted-lt);transition:color var(--t)}
+    .foot-col ul li a:hover{color:var(--text)}
+    .foot-bottom{
+      padding-top:32px;border-top:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .foot-bottom p{font-size:12px;color:var(--muted)}
+    .fbadges{display:flex;gap:8px}
+    .fb{
+      font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+      color:var(--muted);background:var(--card);
+      border:1px solid var(--border);border-radius:4px;padding:4px 10px;
+    }
+
+    /* ── Responsive ────────────────────────── */
+    @media(max-width:1100px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:900px){
+      .nav-links{display:none}
+      .trust-grid{grid-template-columns:repeat(2,1fr)}
+      .ti{border-right:none;border-bottom:1px solid var(--border)}
+      .ti:nth-child(odd){border-right:1px solid var(--border)}
+      .ti:last-child,.ti:nth-last-child(2){border-bottom:none}
+      .pgrid{grid-template-columns:repeat(2,1fr)}
+      .sci-grid{grid-template-columns:1fr;gap:40px}
+      .why-grid{grid-template-columns:1fr 1fr}
+      .coa-block{grid-template-columns:1fr}
+      .foot-grid{grid-template-columns:1fr 1fr}
+      .hero-stats{flex-direction:column;gap:0;width:100%;max-width:340px}
+      .hstat{border-right:none;border-bottom:1px solid var(--border)}
+      .hstat:last-child{border-bottom:none}
+    }
+    @media(max-width:600px){
+      .pgrid{grid-template-columns:repeat(2,1fr)}
+      .why-grid{grid-template-columns:1fr}
+      .foot-grid{grid-template-columns:1fr}
+      .foot-bottom{flex-direction:column;gap:12px;text-align:center}
+      .coa-nums{flex-wrap:wrap}
+      .hero h1{font-size:28px}
+      .hero-logo-wrap img{height:110px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Age Gate -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <img src="logo.png" alt="Titan Bio Labs">
+    </div>
+    <h2>Age Verification Required</h2>
+    <p>All products are for in-vitro laboratory research use only. You must be 21 or older and a qualified research professional to enter this site.</p>
+    <div class="gate-btns">
+      <button class="gate-yes" onclick="document.getElementById('gate').style.display='none'">I Am 21+ — Enter</button>
+      <button class="gate-no" onclick="window.location='https://www.google.com'">Under 21</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<!-- Announcement -->
+<div class="bar">
+  <strong>Free Shipping</strong> on orders over $150
+  <span>·</span>
+  Same-day processing before 2PM EST
+  <span>·</span>
+  <strong>Third-Party Tested</strong> &nbsp;·&nbsp; Research Use Only &nbsp;·&nbsp; 21+ Required
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-wrap">
+    <a href="index.html" class="nav-logo-wrap">
+      <img src="logo.png" alt="Titan Bio Labs">
+    </a>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#science">Our Process</a>
+      <a href="#coa">COA Library</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:info@titanbiolabs.com">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="cart-btn">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Cart
+        <span class="cart-count" id="cart-count">0</span>
+      </a>
+      <button class="nav-btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-logo-wrap">
+    <img src="logo.png" alt="Titan Bio Labs">
+  </div>
+  <div class="hero-content">
+    <span class="hero-label">Research Use Only — 21+ Required</span>
+    <h1>Titan Biolabs, where elite performance<br>is the standard,<br><em>not the goal.</em></h1>
+    <p class="hero-sub">High-purity research compounds — independently tested, verified by accredited third-party labs, and every Certificate of Analysis published before it ships.</p>
+    <div class="hero-btns">
+      <button class="btn-solid" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        Shop Compounds
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-ghost" onclick="document.getElementById('coa').scrollIntoView({behavior:'smooth'})">View COA Library</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">99.9<sup>%</sup></div><div class="hstat-l">Average Purity</div></div>
+      <div class="hstat"><div class="hstat-n">30<sup>+</sup></div><div class="hstat-l">Compounds</div></div>
+      <div class="hstat"><div class="hstat-n">3<sup>rd</sup> Party</div><div class="hstat-l">Tested</div></div>
+      <div class="hstat"><div class="hstat-n">COA</div><div class="hstat-l">Every Batch</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust Strip -->
+<div class="trust">
+  <div class="trust-grid">
+    <div class="ti">
+      <div class="ti-ico"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg></div>
+      <div><strong>HPLC + Mass Spec</strong><span>Dual verification, every batch</span></div>
+    </div>
+    <div class="ti">
+      <div class="ti-ico"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+      <div><strong>COA Published</strong><span>Batch-specific, fully transparent</span></div>
+    </div>
+    <div class="ti">
+      <div class="ti-ico"><svg viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div>
+      <div><strong>Third-Party Tested</strong><span>Accredited independent labs</span></div>
+    </div>
+    <div class="ti">
+      <div class="ti-ico"><svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+      <div><strong>Same-Day Shipping</strong><span>Orders before 2PM EST</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Products -->
+<section class="section" id="products">
+  <div class="wrap">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px">
+      <div><p class="kicker">Full Catalog</p><h2 class="h2">Research Compounds</h2></div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="flt('all',this)">All</button>
+      <button class="tab" onclick="flt('metabolic',this)">Metabolic</button>
+      <button class="tab" onclick="flt('recovery',this)">Recovery</button>
+      <button class="tab" onclick="flt('gh',this)">Growth Hormone</button>
+      <button class="tab" onclick="flt('cognitive',this)">Cognitive</button>
+      <button class="tab" onclick="flt('longevity',this)">Longevity</button>
+      <button class="tab" onclick="flt('hormonal',this)">Hormonal</button>
+      <button class="tab" onclick="flt('blend',this)">Blends</button>
+      <button class="tab" onclick="flt('accessory',this)">Accessories</button>
+    </div>
+    <div class="pgrid">
+
+      <!-- METABOLIC -->
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><span class="pc-bdg bdg-new">Popular</span><img src="images/semaglutide.png" alt="Semaglutide"></div><div class="pc-body"><div class="pc-name">Semaglutide</div><div class="pc-dose">10mg / 20mg</div><div class="pc-desc">GLP-1 receptor agonist studied for metabolic regulation, appetite signaling, and glucose homeostasis. Third-party verified, batch-specific COA.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div><div class="pc-price-alt">20mg — $75.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Semaglutide','10mg',60,'images/semaglutide.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/retatrutide.png" alt="Retatrutide"></div><div class="pc-body"><div class="pc-name">Retatrutide</div><div class="pc-dose">10mg</div><div class="pc-desc">Triple-receptor agonist targeting GLP-1, GIP, and glucagon pathways simultaneously. Next-generation metabolic and energy-balance research compound.</div><div class="pc-foot"><div><div class="pc-price">$95.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Retatrutide','10mg',95,'images/retatrutide.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/tirzepatide.png" alt="Tirzepatide"></div><div class="pc-body"><div class="pc-name">Tirzepatide</div><div class="pc-dose">20mg</div><div class="pc-desc">Dual GLP-1/GIP agonist studied for superior metabolic impact on insulin sensitivity, weight regulation, and energy balance.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Tirzepatide','20mg',50,'images/tirzepatide.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/slu-pp-332.png" alt="SLU-PP-332"></div><div class="pc-body"><div class="pc-name">SLU-PP-332</div><div class="pc-dose">10mg</div><div class="pc-desc">ERR agonist studied as an exercise mimetic — activates endurance metabolic pathways at the cellular level without physical stimulus.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('SLU-PP-332','10mg',50,'images/slu-pp-332.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/amino-1mq.png" alt="5-Amino-1MQ"></div><div class="pc-body"><div class="pc-name">5-Amino-1MQ</div><div class="pc-dose">10mg</div><div class="pc-desc">NNMT inhibitor targeting NAD+ metabolism pathways. Studied for fat oxidation, metabolic efficiency, and cellular energy regulation.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('5-Amino-1MQ','10mg',60,'images/amino-1mq.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/l-carnitine.png" alt="L-Carnitine"></div><div class="pc-body"><div class="pc-name">L-Carnitine</div><div class="pc-dose">1200mg</div><div class="pc-desc">Transports fatty acids into mitochondria for ATP synthesis. Foundational compound for fat oxidation and cellular energy efficiency research.</div><div class="pc-foot"><div><div class="pc-price">$35.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('L-Carnitine','1200mg',35,'images/l-carnitine.png')">Add</button></div></div></div></div>
+
+      <!-- RECOVERY -->
+      <div class="pc" data-cat="recovery"><div class="pc-img"><span class="pc-bdg bdg-bun">Bundle</span><img src="images/bpc-157.png" alt="BPC-157 + TB-500"></div><div class="pc-body"><div class="pc-name">BPC-157 + TB-500</div><div class="pc-dose">Bundle · 10mg Each</div><div class="pc-desc">Two leading recovery peptides. BPC-157 targets musculoskeletal and gut repair; TB-500 promotes cell migration and tissue regeneration.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('BPC-157 + TB-500','Bundle · 10mg Each',60,'images/bpc-157.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="recovery"><div class="pc-img"><img src="images/ara-290.png" alt="ARA-290"></div><div class="pc-body"><div class="pc-name">ARA-290</div><div class="pc-dose">10mg</div><div class="pc-desc">EPO-derived peptide targeting tissue-protective receptors without affecting red blood cell production. Studied for neuroprotection and cellular repair.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('ARA-290','10mg',60,'images/ara-290.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="recovery"><div class="pc-img"><img src="images/glutathione.png" alt="Glutathione"></div><div class="pc-body"><div class="pc-name">Glutathione</div><div class="pc-dose">600mg</div><div class="pc-desc">Master endogenous antioxidant. Studied for oxidative stress reduction, liver detoxification, immune modulation, and cellular protection.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Glutathione','600mg',40,'images/glutathione.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="recovery"><div class="pc-img"><img src="images/kpv.png" alt="KPV"></div><div class="pc-body"><div class="pc-name">KPV</div><div class="pc-dose">Research Grade</div><div class="pc-desc">α-MSH-derived anti-inflammatory tripeptide with oral stability. Studied for gut inflammation, wound healing, and targeted tissue repair.</div><div class="pc-foot"><div><div class="pc-price">$55.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('KPV','Research Grade',55,'images/kpv.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="recovery"><div class="pc-img"><img src="images/ss-31.png" alt="SS-31"></div><div class="pc-body"><div class="pc-name">SS-31</div><div class="pc-dose">10mg</div><div class="pc-desc">Mitochondria-targeted antioxidant peptide studied for cellular energy optimization and protection against oxidative damage at the mitochondrial membrane.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=SS-31 Inquiry'">Inquire</button></div></div></div></div>
+
+      <!-- GROWTH HORMONE -->
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/ipamorelin.png" alt="Ipamorelin"></div><div class="pc-body"><div class="pc-name">Ipamorelin</div><div class="pc-dose">5mg / 10mg</div><div class="pc-desc">Selective ghrelin receptor agonist that stimulates GH release without significantly affecting cortisol or prolactin pathways. High receptor selectivity.</div><div class="pc-foot"><div><div class="pc-price">$35.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Ipamorelin','5mg',35,'images/ipamorelin.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="gh"><div class="pc-img"><span class="pc-bdg bdg-bun">Stack</span><img src="images/cjc-ipamorelin.png" alt="CJC-1295 + Ipamorelin"></div><div class="pc-body"><div class="pc-name">CJC-1295 + Ipamorelin</div><div class="pc-dose">Research Stack</div><div class="pc-desc">Dual-peptide GH-axis stack. CJC-1295 extends GHRH half-life; Ipamorelin amplifies pulsatile GH release through selective receptor activation.</div><div class="pc-foot"><div><div class="pc-price">$55.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('CJC-1295 + Ipamorelin','Research Stack',55,'images/cjc-ipamorelin.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/tesamorelin.png" alt="Tesamorelin"></div><div class="pc-body"><div class="pc-name">Tesamorelin</div><div class="pc-dose">10mg · 5mg Available</div><div class="pc-desc">Synthetic GHRH analog for physiologically aligned GH release via pituitary activation. Studied for visceral fat and body composition research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Tesamorelin','10mg',65,'images/tesamorelin.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/igf-1lr3.png" alt="IGF-1 LR3"></div><div class="pc-body"><div class="pc-name">IGF-1 LR3</div><div class="pc-dose">1mg</div><div class="pc-desc">Long-acting IGF-1 analog with extended half-life. Studied for cell proliferation, nutrient partitioning, and regenerative processes at the growth factor level.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('IGF-1 LR3','1mg',65,'images/igf-1lr3.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/hgh-191aa.png" alt="HGH 191AA"></div><div class="pc-body"><div class="pc-name">HGH 191AA</div><div class="pc-dose">15iu / 24iu</div><div class="pc-desc">Full-sequence 191 amino acid human growth hormone. Foundational reference compound for growth pathway, tissue regeneration, and metabolic research.</div><div class="pc-foot"><div><div class="pc-price">$75.00</div><div class="pc-price-alt">24iu — $100.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('HGH 191AA','15iu',75,'images/hgh-191aa.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/ghrp-6.png" alt="GHRP-6"></div><div class="pc-body"><div class="pc-name">GHRP-6</div><div class="pc-dose">10mg</div><div class="pc-desc">Growth hormone releasing hexapeptide studied for robust GH secretion via ghrelin receptor activation. Researched for recovery and metabolic activity.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=GHRP-6 Inquiry'">Inquire</button></div></div></div></div>
+
+      <!-- COGNITIVE -->
+      <div class="pc" data-cat="cognitive"><div class="pc-img"><img src="images/semax.png" alt="Semax"></div><div class="pc-body"><div class="pc-name">Semax</div><div class="pc-dose">30mg</div><div class="pc-desc">Synthetic ACTH analog studied for neuroprotection and cognitive enhancement via BDNF pathway influence. A leading compound in neuropeptide research.</div><div class="pc-foot"><div><div class="pc-price">$55.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Semax','30mg',55,'images/semax.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="cognitive"><div class="pc-img"><img src="images/selank.png" alt="Selank"></div><div class="pc-body"><div class="pc-name">Selank</div><div class="pc-dose">10mg</div><div class="pc-desc">Tuftsin-derived anxiolytic peptide. Studied for anxiety regulation, cognitive clarity, and neurochemical balance with a clean research profile.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Selank','10mg',40,'images/selank.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="cognitive"><div class="pc-img"><img src="images/dsip.png" alt="DSIP"></div><div class="pc-body"><div class="pc-name">DSIP</div><div class="pc-dose">5mg · Delta Sleep Peptide</div><div class="pc-desc">Naturally occurring neuropeptide modulating circadian rhythm and sleep architecture. Studied for sleep quality, hormonal balance, and stress recovery.</div><div class="pc-foot"><div><div class="pc-price">$35.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('DSIP','5mg',35,'images/dsip.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="cognitive"><div class="pc-img"><img src="images/oxytocin.png" alt="Oxytocin"></div><div class="pc-body"><div class="pc-name">Oxytocin</div><div class="pc-dose">5mg</div><div class="pc-desc">Endogenous neuropeptide governing social bonding, trust signaling, and stress modulation. Studied for neurological and behavioral pathway research.</div><div class="pc-foot"><div><div class="pc-price">$30.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Oxytocin','5mg',30,'images/oxytocin.png')">Add</button></div></div></div></div>
+
+      <!-- LONGEVITY -->
+      <div class="pc" data-cat="longevity"><div class="pc-img"><img src="images/nad-plus.png" alt="NAD+"></div><div class="pc-body"><div class="pc-name">NAD+</div><div class="pc-dose">500mg</div><div class="pc-desc">Master coenzyme essential for mitochondrial function, DNA repair, and sirtuin activation. Central compound in longevity and metabolic health research.</div><div class="pc-foot"><div><div class="pc-price">$100.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('NAD+','500mg',100,'images/nad-plus.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="longevity"><div class="pc-img"><img src="images/thymosin-alpha1.png" alt="Thymosin Alpha-1"></div><div class="pc-body"><div class="pc-name">Thymosin Alpha-1</div><div class="pc-dose">10mg</div><div class="pc-desc">Thymus-derived immunomodulatory peptide studied for T-cell activation, antiviral response, and immune system regulation. Well-documented mechanism.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=Thymosin Alpha-1 Inquiry'">Inquire</button></div></div></div></div>
+
+      <!-- HORMONAL -->
+      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/hcg.png" alt="HCG"></div><div class="pc-body"><div class="pc-name">HCG</div><div class="pc-dose">5,000iu / 10,000iu</div><div class="pc-desc">Human chorionic gonadotropin studied for LH-receptor stimulation, testosterone pathway activation, and endocrine regulation research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div><div class="pc-price-alt">10,000iu — $100.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('HCG','5,000iu',65,'images/hcg.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/kisspeptin.png" alt="Kisspeptin"></div><div class="pc-body"><div class="pc-name">Kisspeptin</div><div class="pc-dose">10mg</div><div class="pc-desc">Hypothalamic neuropeptide controlling the reproductive hormone axis — stimulating GnRH release and downstream sex hormone production.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Kisspeptin','10mg',60,'images/kisspeptin.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/pt-141.png" alt="PT-141"></div><div class="pc-body"><div class="pc-name">PT-141</div><div class="pc-dose">10mg · Bremelanotide</div><div class="pc-desc">Melanocortin receptor agonist acting through the CNS. Studied for neurological arousal and sexual health signaling distinct from vascular pathways.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('PT-141','10mg',40,'images/pt-141.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/melanotan-2.png" alt="Melanotan II"></div><div class="pc-body"><div class="pc-name">Melanotan II</div><div class="pc-dose">10mg</div><div class="pc-desc">Synthetic melanocortin analog studied for melanogenesis via MC1R activation and broader neurological pathway influence.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Melanotan II','10mg',40,'images/melanotan-2.png')">Add</button></div></div></div></div>
+
+      <!-- BLENDS -->
+      <div class="pc" data-cat="blend"><div class="pc-img"><span class="pc-bdg bdg-bun">Blend</span><img src="images/glow-blend.png" alt="Glow Blend"></div><div class="pc-body"><div class="pc-name">Glow Blend</div><div class="pc-dose">20/5/5 Formulation</div><div class="pc-desc">Precision peptide combination targeting collagen synthesis, skin hydration, and oxidative stress reduction for cellular-level skin research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Glow Blend','20/5/5 Formulation',65,'images/glow-blend.png')">Add</button></div></div></div></div>
+
+      <div class="pc" data-cat="blend"><div class="pc-img"><span class="pc-bdg bdg-bun">Premium</span><img src="images/performance-blend.png" alt="Performance Blend"></div><div class="pc-body"><div class="pc-name">Performance Blend</div><div class="pc-dose">Advanced Formulation</div><div class="pc-desc">Multi-compound stack for metabolic activity, energy balance, and systemic physiological optimization at the cellular level.</div><div class="pc-foot"><div><div class="pc-price">$140.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Performance Blend','Advanced Formulation',140,'images/performance-blend.png')">Add</button></div></div></div></div>
+
+      <!-- ACCESSORIES -->
+      <div class="pc" data-cat="accessory"><div class="pc-img"><img src="images/bac-water.png" alt="BAC Water"></div><div class="pc-body"><div class="pc-name">BAC Water</div><div class="pc-dose">10ml Sterile Vial</div><div class="pc-desc">Bacteriostatic water with 0.9% benzyl alcohol — the standard reconstitution solution for lyophilized peptides. Sterile and multi-dose safe.</div><div class="pc-foot"><div><div class="pc-price">$15.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('BAC Water','10ml Sterile Vial',15,'images/bac-water.png')">Add</button></div></div></div></div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Science -->
+<section class="section sci-wrap" id="science">
+  <div class="wrap">
+    <div class="sci-grid">
+      <div>
+        <p class="kicker">Our Process</p>
+        <h2 class="h2" style="margin-bottom:14px">No Guesswork.<br>Just Verified Data.</h2>
+        <p style="font-size:15px;color:var(--muted-lt);line-height:1.7;margin-bottom:32px">Every compound ships with documented proof — not claims. Data from accredited, independent laboratories published before any product leaves our facility.</p>
+        <div class="steps">
+          <div class="step"><div class="sn">1</div><div><strong>Synthesis &amp; Lyophilization</strong><span>Peptides synthesized to specification and lyophilized for maximum stability and shelf life.</span></div></div>
+          <div class="step"><div class="sn">2</div><div><strong>HPLC Analysis</strong><span>High-performance liquid chromatography confirms exact purity percentage — every batch, no exceptions.</span></div></div>
+          <div class="step"><div class="sn">3</div><div><strong>Mass Spectrometry</strong><span>Structural identity confirmed independently. You know exactly what compound you're researching.</span></div></div>
+          <div class="step"><div class="sn">4</div><div><strong>COA Published</strong><span>Batch-specific Certificate of Analysis posted to our public library before shipment.</span></div></div>
+        </div>
+      </div>
+      <div class="sci-panel">
+        <div class="sp-label">Current Batch Purity Results</div>
+        <div class="pr"><div class="pr-top"><span>Semaglutide · Batch 2406-A</span><strong>99.8%</strong></div><div class="pr-bar"><div class="pr-fill" style="width:99.8%"></div></div></div>
+        <div class="pr"><div class="pr-top"><span>Retatrutide · Batch 2406-B</span><strong>99.9%</strong></div><div class="pr-bar"><div class="pr-fill" style="width:99.9%"></div></div></div>
+        <div class="pr"><div class="pr-top"><span>IGF-1 LR3 · Batch 2406-C</span><strong>99.7%</strong></div><div class="pr-bar"><div class="pr-fill" style="width:99.7%"></div></div></div>
+        <div class="pr"><div class="pr-top"><span>NAD+ · Batch 2406-D</span><strong>99.9%</strong></div><div class="pr-bar"><div class="pr-fill" style="width:99.9%"></div></div></div>
+        <div class="methods">
+          <div class="method"><strong>HPLC</strong><span>Purity Verification</span></div>
+          <div class="method"><strong>MS/MS</strong><span>Identity Confirmation</span></div>
+          <div class="method"><strong>3rd Party</strong><span>Accredited Labs</span></div>
+          <div class="method"><strong>Batch-Specific</strong><span>No Generic COAs</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why -->
+<section class="section">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:40px"><p class="kicker">Why Titan Bio Labs</p><h2 class="h2">The Standard Others Should Meet</h2></div>
+    <div class="why-grid">
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div><h3>Batch-Specific COAs</h3><p>Every Certificate of Analysis is tied to the exact batch you receive — not a recycled document from a prior run. Your data, not someone else's.</p></div>
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg></div><h3>Dual-Method Verification</h3><p>HPLC confirms purity. Mass spectrometry confirms identity. Two independent methods per batch. We don't ship on one method alone.</p></div>
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg></div><h3>Third-Party Verified</h3><p>Every compound is tested by accredited independent laboratories — not in-house. No conflict of interest. The data is verifiable before you buy.</p></div>
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><h3>Same-Day Processing</h3><p>Order before 2PM EST and your order ships today. Research timelines matter. We don't hold orders until next week.</p></div>
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg></div><h3>Discreet by Default</h3><p>Every order ships in plain, unmarked packaging. No company name visible on the outside. Privacy is the default — not an upsell.</p></div>
+      <div class="wc"><div class="wi"><svg viewBox="0 0 24 24"><path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg></div><h3>Real Support</h3><p>A real person answers your questions — not a ticket system. Email us at <a href="mailto:info@titanbiolabs.com" style="color:#93c5fd">info@titanbiolabs.com</a> and get a direct response.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COA -->
+<div class="wrap" id="coa">
+  <div class="coa-block">
+    <div>
+      <p class="kicker">COA Library</p>
+      <h2 style="font-size:28px;font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:10px">Full Transparency.<br>Every Batch. Always.</h2>
+      <p style="font-size:14px;color:var(--muted-lt);max-width:440px;line-height:1.65">Our COA Library is publicly accessible — no login required. Search by compound, batch number, or test date. If we shipped it, the data is published.</p>
+      <a href="#" class="coa-link">Access COA Library <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="coa-nums">
+      <div class="cn"><div class="cn-n">100%</div><div class="cn-l">Batches Published</div></div>
+      <div class="cn"><div class="cn-n">2</div><div class="cn-l">Test Methods</div></div>
+      <div class="cn"><div class="cn-n">48hr</div><div class="cn-l">COA Before Ship</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="section" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:40px"><p class="kicker">Common Questions</p><h2 class="h2">FAQ</h2></div>
+    <div class="faq">
+      <div class="fi"><button class="fq">Who can purchase from Titan Bio Labs?<span class="fic">+</span></button><div class="fa">All products are for in-vitro laboratory research use only. Purchases are restricted to qualified research professionals and individuals 21 years of age or older. By purchasing, you confirm you meet these requirements and that all products will be used solely for lawful research purposes.</div></div>
+      <div class="fi"><button class="fq">How do I find the COA for my specific batch?<span class="fic">+</span></button><div class="fa">Every product listing links directly to its current batch COA. Your packing slip includes the batch number — cross-reference it in our public COA Library at any time. Every document is batch-specific to what you received. We never use generic or shared COAs.</div></div>
+      <div class="fi"><button class="fq">What testing methods do you use?<span class="fic">+</span></button><div class="fa">Every batch is verified using two independent methods: HPLC (High-Performance Liquid Chromatography) for purity percentage, and Mass Spectrometry for compound identity and structural integrity. Testing is performed by accredited third-party laboratories — not in-house — to eliminate conflict of interest.</div></div>
+      <div class="fi"><button class="fq">Are these products FDA approved?<span class="fic">+</span></button><div class="fa">No. These products have not been evaluated by the FDA and are not intended to diagnose, treat, cure, or prevent any disease. They are sold exclusively for in-vitro laboratory research use. They are not for human or animal consumption, administration, or application of any kind.</div></div>
+      <div class="fi"><button class="fq">What are your shipping and return policies?<span class="fic">+</span></button><div class="fa">Orders placed before 2PM EST ship the same day. Free shipping on orders over $150. All packaging is plain and unmarked. Due to the specialized nature of research compounds, all sales are final. Contact info@titanbiolabs.com for any order issues.</div></div>
+      <div class="fi"><button class="fq">What payment methods are accepted?<span class="fic">+</span></button><div class="fa">We accept major credit cards and electronic payment options. All transactions are encrypted and processed by secure third-party payment providers. Titan Bio Labs does not store payment card data. Full payment is required before shipment.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Disclaimer -->
+<div class="wrap">
+  <div class="disc">
+    <p><strong>RESEARCH USE ONLY — NOT FOR HUMAN CONSUMPTION.</strong> All products sold by Titan Bio Labs are strictly for in-vitro laboratory research use only. These products are not medicines, drugs, dietary supplements, or food products and have not been evaluated or approved by the U.S. Food and Drug Administration (FDA). They are not intended to diagnose, treat, cure, or prevent any disease, condition, or health concern in humans or animals. These products are not intended for administration to humans or animals by any means including but not limited to injection, ingestion, topical application, or inhalation.</p>
+    <br>
+    <p>By purchasing from Titan Bio Labs, you confirm that you are 21 years of age or older, a qualified research professional, and that all purchased compounds will be used exclusively for lawful in-vitro research purposes in a controlled laboratory environment. Titan Bio Labs LLC assumes no liability for misuse, improper handling, or use outside of in-vitro research settings. All sales are subject to applicable federal and state laws. Purchaser assumes all responsibility for compliance with local, state, and federal regulations. <strong>Titan Bio Labs LLC · Troy, MO · <a href="mailto:info@titanbiolabs.com" style="color:inherit">info@titanbiolabs.com</a></strong></p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-logo-wrap"><img src="logo.png" alt="Titan Bio Labs" style="height:36px"></div>
+        <p>High-purity research compounds — independently tested, third-party verified, every COA published before it ships.</p>
+        <div class="foot-socials">
+          <a href="https://www.instagram.com/titanbiolabs" target="_blank" class="fsoc" title="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://www.facebook.com/titanbiolabs" target="_blank" class="fsoc" title="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com/titanbiolabs" target="_blank" class="fsoc" title="X / Twitter">
+            <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+          </a>
+          <a href="mailto:info@titanbiolabs.com" class="fsoc" title="Email">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="foot-col"><h4>Products</h4><ul><li><a href="#products" onclick="flt('metabolic',document.querySelector('[onclick*=metabolic]'))">Metabolic</a></li><li><a href="#products" onclick="flt('recovery',document.querySelector('[onclick*=recovery]'))">Recovery</a></li><li><a href="#products" onclick="flt('gh',document.querySelector('[onclick*=gh]'))">Growth Hormone</a></li><li><a href="#products" onclick="flt('cognitive',document.querySelector('[onclick*=cognitive]'))">Cognitive</a></li><li><a href="#products" onclick="flt('longevity',document.querySelector('[onclick*=longevity]'))">Longevity</a></li><li><a href="#products" onclick="flt('hormonal',document.querySelector('[onclick*=hormonal]'))">Hormonal</a></li><li><a href="#products" onclick="flt('blend',document.querySelector('[onclick*=blend]'))">Blends</a></li></ul></div>
+      <div class="foot-col"><h4>Research</h4><ul><li><a href="#coa">COA Library</a></li><li><a href="#science">Our Process</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div class="foot-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="mailto:info@titanbiolabs.com">Contact</a></li><li><a href="#">Shipping Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <p>&copy; 2024 Titan Bio Labs LLC &nbsp;·&nbsp; Troy, MO &nbsp;·&nbsp; For Research Use Only &nbsp;·&nbsp; 21+ Required</p>
+      <div class="fbadges"><span class="fb">HPLC Verified</span><span class="fb">3rd Party Tested</span><span class="fb">Research Use Only</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── FAQ accordion ─────────── */
+  document.querySelectorAll('.fq').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const i=b.closest('.fi'),o=i.classList.contains('open');
+      document.querySelectorAll('.fi').forEach(x=>x.classList.remove('open'));
+      if(!o)i.classList.add('open');
+    });
+  });
+
+  /* ── Category filter ───────── */
+  function flt(cat,el){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    if(el)el.classList.add('on');
+    document.querySelectorAll('.pc').forEach(c=>{
+      c.classList.toggle('off',cat!=='all'&&c.dataset.cat!==cat);
+    });
+  }
+
+  /* ── Cart system ───────────── */
+  const CART_KEY='titan_cart';
+
+  function getCart(){
+    try{return JSON.parse(localStorage.getItem(CART_KEY)||'[]')}catch(e){return[]}
+  }
+  function saveCart(cart){
+    localStorage.setItem(CART_KEY,JSON.stringify(cart));
+    updateCartBadge();
+  }
+  function updateCartBadge(){
+    const cart=getCart();
+    const total=cart.reduce((s,i)=>s+i.qty,0);
+    const el=document.getElementById('cart-count');
+    if(!el)return;
+    el.textContent=total;
+    el.style.display=total>0?'flex':'none';
+  }
+  function addToCart(name,dose,price,img){
+    const cart=getCart();
+    const key=name+'__'+dose;
+    const existing=cart.find(i=>i.key===key);
+    if(existing){existing.qty++}else{cart.push({key,name,dose,price,img,qty:1})}
+    saveCart(cart);
+    showToast(name+' added to cart');
+  }
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent='✓  '+msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer=setTimeout(()=>t.classList.remove('show'),2400);
+  }
+
+  /* Init badge on load */
+  updateCartBadge();
+</script>
+</body>
+</html>

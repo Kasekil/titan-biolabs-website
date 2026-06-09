@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart | Titan Bio Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #080D16;
+      --surface:   #0D1525;
+      --card:      #111D30;
+      --card-ho:   #162338;
+      --border:    #1C2D42;
+      --border-lt: #253A52;
+      --blue:      #2563EB;
+      --blue-dim:  rgba(37,99,235,0.12);
+      --text:      #E1E8F0;
+      --muted:     #5A7289;
+      --muted-lt:  #8099B3;
+      --green:     #10B981;
+      --red:       #EF4444;
+      --r:         7px;
+      --r-lg:      14px;
+      --sh:        0 4px 20px rgba(0,0,0,.45);
+      --t:         .18s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--bg);color:var(--text);
+      font-family:'Inter',-apple-system,sans-serif;
+      font-size:15px;line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+
+    /* ── Nav ──────────────────── */
+    nav{
+      background:rgba(8,13,22,.96);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:100;
+    }
+    .nav-wrap{
+      max-width:1100px;margin:0 auto;padding:0 32px;
+      display:flex;align-items:center;justify-content:space-between;
+      height:70px;
+    }
+    .nav-logo img{height:40px;width:auto}
+    .back-btn{
+      display:flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:500;color:var(--muted-lt);
+      transition:color var(--t);
+    }
+    .back-btn:hover{color:var(--text)}
+    .back-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    /* ── Layout ───────────────── */
+    .page{max-width:1100px;margin:0 auto;padding:48px 32px 80px}
+    .page-header{margin-bottom:36px}
+    .page-header h1{font-size:28px;font-weight:800;letter-spacing:-.02em;color:#fff}
+    .page-header p{font-size:14px;color:var(--muted-lt);margin-top:4px}
+
+    .cart-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start}
+
+    /* ── Cart Items ───────────── */
+    .items-block{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+    .items-block .block-header{
+      padding:18px 24px;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .block-header h2{font-size:14px;font-weight:600;color:#fff}
+    .block-header button{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;transition:color var(--t)}
+    .block-header button:hover{color:var(--red)}
+
+    /* Empty state */
+    .empty{
+      padding:64px 32px;text-align:center;
+    }
+    .empty svg{width:48px;height:48px;stroke:var(--muted);fill:none;stroke-width:1.2;opacity:.5;margin:0 auto 16px}
+    .empty h3{font-size:16px;font-weight:600;color:var(--muted-lt);margin-bottom:8px}
+    .empty p{font-size:13px;color:var(--muted)}
+    .empty a{
+      display:inline-flex;align-items:center;gap:7px;
+      margin-top:20px;padding:11px 22px;
+      background:var(--blue);color:#fff;
+      font-size:13px;font-weight:600;
+      border-radius:var(--r);
+      transition:background var(--t);
+    }
+    .empty a:hover{background:#1d4ed8}
+
+    /* Cart row */
+    .cart-row{
+      display:grid;grid-template-columns:60px 1fr auto auto 36px;
+      align-items:center;gap:16px;
+      padding:18px 24px;
+      border-bottom:1px solid var(--border);
+      transition:background var(--t);
+    }
+    .cart-row:last-child{border-bottom:none}
+    .cart-row:hover{background:var(--card-ho)}
+    .cr-img{
+      width:60px;height:60px;
+      background:#0a1525;
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      overflow:hidden;
+      flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .cr-img img{width:100%;height:100%;object-fit:contain;padding:6px}
+    .cr-img .img-placeholder{
+      width:100%;height:100%;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .cr-img .img-placeholder svg{width:22px;height:22px;opacity:.2;stroke:#fff;fill:none;stroke-width:1.2}
+    .cr-info{}
+    .cr-name{font-size:14px;font-weight:600;color:#fff;line-height:1.2}
+    .cr-dose{font-size:12px;color:#93c5fd;margin-top:3px}
+    .cr-unit{font-size:11px;color:var(--muted);margin-top:4px}
+    .cr-qty{
+      display:flex;align-items:center;gap:0;
+      border:1px solid var(--border);border-radius:var(--r);
+      overflow:hidden;background:var(--surface);
+    }
+    .qty-btn{
+      width:30px;height:30px;
+      background:none;border:none;cursor:pointer;
+      color:var(--muted-lt);font-size:16px;font-weight:600;
+      display:flex;align-items:center;justify-content:center;
+      transition:var(--t);
+    }
+    .qty-btn:hover{background:var(--border);color:var(--text)}
+    .qty-val{
+      min-width:32px;text-align:center;
+      font-size:13px;font-weight:600;color:#fff;
+      padding:0 4px;
+      border-left:1px solid var(--border);border-right:1px solid var(--border);
+      line-height:30px;
+    }
+    .cr-total{font-size:15px;font-weight:700;color:#fff;text-align:right;min-width:64px}
+    .cr-remove{
+      width:30px;height:30px;
+      background:none;border:none;cursor:pointer;
+      color:var(--muted);
+      display:flex;align-items:center;justify-content:center;
+      border-radius:5px;transition:var(--t);
+    }
+    .cr-remove:hover{color:var(--red);background:rgba(239,68,68,.08)}
+    .cr-remove svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    /* ── Order Summary ────────── */
+    .summary-block{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
+      position:sticky;top:90px;
+    }
+    .summary-block .block-header{padding:18px 24px;border-bottom:1px solid var(--border)}
+    .summary-inner{padding:24px}
+    .sum-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--muted-lt)}
+    .sum-row strong{color:#fff;font-weight:600}
+    .sum-divider{height:1px;background:var(--border);margin:16px 0}
+    .sum-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .sum-total span{font-size:15px;font-weight:700;color:#fff}
+    .sum-total strong{font-size:22px;font-weight:800;color:#fff}
+    .sum-note{font-size:11px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+    .checkout-btn{
+      width:100%;padding:14px;
+      background:var(--blue);color:#fff;
+      font-size:14px;font-weight:700;
+      border:none;border-radius:var(--r);cursor:pointer;
+      transition:background var(--t),box-shadow var(--t);
+      margin-bottom:10px;
+    }
+    .checkout-btn:hover{background:#1d4ed8;box-shadow:0 0 24px rgba(37,99,235,.3)}
+    .checkout-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;box-shadow:none}
+    .trust-badges{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+    .tbadge{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted-lt)}
+    .tbadge svg{width:14px;height:14px;stroke:#10B981;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+    /* ── Checkout Form ─────────── */
+    .checkout-section{
+      margin-top:28px;
+      background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);
+      overflow:hidden;
+    }
+    .checkout-section .block-header{padding:18px 24px;border-bottom:1px solid var(--border)}
+    .checkout-section .block-header h2{font-size:14px;font-weight:600;color:#fff}
+    .form-body{padding:24px}
+    .form-section-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;margin-top:24px}
+    .form-section-label:first-child{margin-top:0}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .form-row.full{grid-template-columns:1fr}
+    .form-row.three{grid-template-columns:2fr 1fr 1fr}
+    .fg{display:flex;flex-direction:column;gap:6px}
+    .fg label{font-size:12px;font-weight:500;color:var(--muted-lt)}
+    .fg input,.fg select{
+      background:var(--surface);
+      border:1px solid var(--border);border-radius:var(--r);
+      color:var(--text);font-size:14px;
+      padding:10px 14px;
+      font-family:inherit;
+      transition:border-color var(--t);
+      width:100%;
+    }
+    .fg input:focus,.fg select:focus{
+      outline:none;border-color:rgba(37,99,235,.5);
+      background:#0f1d32;
+    }
+    .fg input::placeholder{color:var(--muted)}
+    .fg select option{background:var(--surface)}
+    .form-divider{height:1px;background:var(--border);margin:20px 0}
+    .payment-placeholder{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r);padding:20px;text-align:center;
+      margin-bottom:20px;
+    }
+    .payment-placeholder p{font-size:13px;color:var(--muted-lt);margin-bottom:6px}
+    .payment-placeholder strong{font-size:12px;color:var(--muted);font-weight:500}
+    .place-order-btn{
+      width:100%;padding:15px;
+      background:var(--blue);color:#fff;
+      font-size:15px;font-weight:700;
+      border:none;border-radius:var(--r);cursor:pointer;
+      transition:background var(--t),box-shadow var(--t);
+    }
+    .place-order-btn:hover{background:#1d4ed8;box-shadow:0 0 28px rgba(37,99,235,.35)}
+    .place-order-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;box-shadow:none}
+    .form-disclaimer{font-size:11px;color:var(--muted);line-height:1.6;margin-top:14px;text-align:center}
+
+    /* ── Order Success ─────────── */
+    #success-screen{
+      display:none;
+      text-align:center;padding:56px 32px;
+    }
+    .success-icon{
+      width:72px;height:72px;
+      background:rgba(16,185,129,.1);
+      border:2px solid rgba(16,185,129,.3);
+      border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+    }
+    .success-icon svg{width:32px;height:32px;stroke:#10B981;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    #success-screen h2{font-size:22px;font-weight:800;color:#fff;margin-bottom:10px}
+    #success-screen p{font-size:14px;color:var(--muted-lt);max-width:380px;margin:0 auto 28px;line-height:1.65}
+    #success-screen a{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:11px 22px;background:var(--blue);color:#fff;
+      font-size:13px;font-weight:600;border-radius:var(--r);
+      transition:background var(--t);
+    }
+    #success-screen a:hover{background:#1d4ed8}
+
+    /* ── Responsive ─────────────── */
+    @media(max-width:900px){
+      .cart-layout{grid-template-columns:1fr}
+      .summary-block{position:static}
+    }
+    @media(max-width:600px){
+      .page{padding:32px 16px 64px}
+      .cart-row{grid-template-columns:48px 1fr auto;gap:12px}
+      .cr-qty,.cr-total{display:none}
+      .form-row{grid-template-columns:1fr}
+      .form-row.three{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-wrap">
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="Titan Bio Labs"></a>
+    <a href="index.html" class="back-btn">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Continue Shopping
+    </a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Your Cart</h1>
+    <p id="cart-summary-line">Loading...</p>
+  </div>
+
+  <div class="cart-layout" id="cart-layout">
+
+    <!-- Left column: items + checkout form -->
+    <div>
+      <!-- Items block -->
+      <div class="items-block">
+        <div class="block-header">
+          <h2>Order Items</h2>
+          <button onclick="clearCart()">Clear All</button>
+        </div>
+        <div id="items-container">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Checkout form (shown when cart has items) -->
+      <div class="checkout-section" id="checkout-form-block" style="display:none">
+        <div class="block-header"><h2>Shipping &amp; Contact</h2></div>
+        <div class="form-body" id="form-body">
+          <form id="order-form" onsubmit="placeOrder(event)">
+            <div class="form-section-label">Contact Information</div>
+            <div class="form-row">
+              <div class="fg"><label>First Name</label><input type="text" placeholder="John" required></div>
+              <div class="fg"><label>Last Name</label><input type="text" placeholder="Smith" required></div>
+            </div>
+            <div class="form-row full">
+              <div class="fg"><label>Email Address</label><input type="email" placeholder="researcher@lab.com" required></div>
+            </div>
+            <div class="form-row full">
+              <div class="fg"><label>Phone (optional)</label><input type="tel" placeholder="+1 (555) 000-0000"></div>
+            </div>
+
+            <div class="form-divider"></div>
+            <div class="form-section-label">Shipping Address</div>
+            <div class="form-row full">
+              <div class="fg"><label>Street Address</label><input type="text" placeholder="123 Research Drive" required></div>
+            </div>
+            <div class="form-row full">
+              <div class="fg"><label>Apt / Suite / Unit (optional)</label><input type="text" placeholder="Suite 200"></div>
+            </div>
+            <div class="form-row three">
+              <div class="fg"><label>City</label><input type="text" placeholder="St. Louis" required></div>
+              <div class="fg">
+                <label>State</label>
+                <select required>
+                  <option value="">—</option>
+                  <option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option>
+                  <option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option>
+                  <option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option>
+                  <option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+                  <option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option>
+                  <option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option>
+                  <option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option>
+                  <option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+                  <option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option>
+                  <option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option>
+                </select>
+              </div>
+              <div class="fg"><label>ZIP Code</label><input type="text" placeholder="63101" pattern="[0-9]{5}" required></div>
+            </div>
+
+            <div class="form-divider"></div>
+            <div class="form-section-label">Payment</div>
+            <div class="payment-placeholder">
+              <p>Secure payment processing</p>
+              <strong>Payment integration coming soon — contact us at info@titanbiolabs.com to place your order directly.</strong>
+            </div>
+
+            <button type="submit" class="place-order-btn">Submit Order Request</button>
+            <p class="form-disclaimer">By submitting, you confirm you are 21+ and a qualified research professional. All products are for in-vitro laboratory research use only. Not for human or animal consumption.</p>
+          </form>
+
+          <div id="success-screen">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2>Order Request Received</h2>
+            <p>Thank you. We'll contact you at the email you provided within 1 business day to confirm your order and arrange payment. Same-day shipping on orders confirmed before 2PM EST.</p>
+            <a href="index.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Back to Products
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column: order summary -->
+    <div>
+      <div class="summary-block">
+        <div class="block-header"><h2>Order Summary</h2></div>
+        <div class="summary-inner" id="summary-inner">
+          <div class="sum-row"><span>Subtotal</span><strong id="sum-subtotal">$0.00</strong></div>
+          <div class="sum-row"><span>Shipping</span><strong id="sum-shipping">—</strong></div>
+          <div class="sum-row"><span>Tax (est.)</span><strong>Calculated at checkout</strong></div>
+          <div class="sum-divider"></div>
+          <div class="sum-total"><span>Total</span><strong id="sum-total">$0.00</strong></div>
+          <div class="sum-note" id="sum-shipping-note">Free shipping on orders over $150. Calculated at checkout.</div>
+          <button class="checkout-btn" id="checkout-cta" onclick="document.getElementById('checkout-form-block').scrollIntoView({behavior:'smooth'})" disabled>Proceed to Checkout</button>
+          <div class="trust-badges">
+            <div class="tbadge"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Third-party tested, COA published</div>
+            <div class="tbadge"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Discreet, plain packaging</div>
+            <div class="tbadge"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Same-day shipping before 2PM EST</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const CART_KEY = 'titan_cart';
+
+  function getCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function saveCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    renderCart();
+  }
+  function clearCart() {
+    if (confirm('Remove all items from cart?')) {
+      localStorage.removeItem(CART_KEY);
+      renderCart();
+    }
+  }
+
+  function changeQty(key, delta) {
+    const cart = getCart();
+    const item = cart.find(i => i.key === key);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart(cart);
+  }
+
+  function removeItem(key) {
+    const cart = getCart().filter(i => i.key !== key);
+    saveCart(cart);
+  }
+
+  function fmt(n) {
+    return '$' + parseFloat(n).toFixed(2);
+  }
+
+  function renderCart() {
+    const cart = getCart();
+    const container = document.getElementById('items-container');
+    const formBlock = document.getElementById('checkout-form-block');
+    const checkoutBtn = document.getElementById('checkout-cta');
+    const summaryLine = document.getElementById('cart-summary-line');
+
+    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+
+    // Summary line
+    summaryLine.textContent = cart.length === 0
+      ? 'Your cart is empty'
+      : totalItems + ' item' + (totalItems !== 1 ? 's' : '') + ' in your cart';
+
+    // Totals
+    document.getElementById('sum-subtotal').textContent = fmt(subtotal);
+    document.getElementById('sum-total').textContent = fmt(subtotal);
+    const shippingEl = document.getElementById('sum-shipping');
+    const shippingNote = document.getElementById('sum-shipping-note');
+    if (subtotal === 0) {
+      shippingEl.textContent = '—';
+      shippingNote.textContent = 'Free shipping on orders over $150.';
+    } else if (subtotal >= 150) {
+      shippingEl.textContent = 'FREE';
+      shippingEl.style.color = '#10B981';
+      shippingNote.textContent = 'Free shipping applied.';
+    } else {
+      shippingEl.textContent = 'Calculated at checkout';
+      shippingEl.style.color = '';
+      shippingNote.textContent = 'Add ' + fmt(150 - subtotal) + ' more for free shipping.';
+    }
+
+    // Checkout button
+    checkoutBtn.disabled = cart.length === 0;
+
+    // Checkout form visibility
+    if (formBlock) formBlock.style.display = cart.length > 0 ? 'block' : 'none';
+
+    if (cart.length === 0) {
+      container.innerHTML = `
+        <div class="empty">
+          <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <h3>Your cart is empty</h3>
+          <p>Add compounds from the product catalog to get started.</p>
+          <a href="index.html">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Browse Products
+          </a>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = cart.map(item => `
+      <div class="cart-row">
+        <div class="cr-img">
+          ${item.img
+            ? `<img src="${escHtml(item.img)}" alt="${escHtml(item.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            : ''}
+          <div class="img-placeholder" style="display:${item.img ? 'none' : 'flex'}">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          </div>
+        </div>
+        <div class="cr-info">
+          <div class="cr-name">${escHtml(item.name)}</div>
+          <div class="cr-dose">${escHtml(item.dose)}</div>
+          <div class="cr-unit">${fmt(item.price)} each</div>
+        </div>
+        <div class="cr-qty">
+          <button class="qty-btn" onclick="changeQty('${escAttr(item.key)}',-1)">−</button>
+          <div class="qty-val">${item.qty}</div>
+          <button class="qty-btn" onclick="changeQty('${escAttr(item.key)}',1)">+</button>
+        </div>
+        <div class="cr-total">${fmt(item.price * item.qty)}</div>
+        <button class="cr-remove" onclick="removeItem('${escAttr(item.key)}')" title="Remove">
+          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function placeOrder(e) {
+    e.preventDefault();
+    const form = document.getElementById('form-body');
+    const success = document.getElementById('success-screen');
+    const orderForm = document.getElementById('order-form');
+
+    // Show success, hide form, clear cart
+    orderForm.style.display = 'none';
+    success.style.display = 'block';
+    localStorage.removeItem(CART_KEY);
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+  }
+
+  renderCart();
+</script>
+</body>
+</html>
