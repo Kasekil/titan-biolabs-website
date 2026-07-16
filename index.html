@@ -368,6 +368,11 @@
     }
     .ba:hover{background:#1d4ed8}
     .ba:active{transform:scale(.96)}
+    .ba:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+    .pc-stock{font-size:10.5px;font-weight:600;margin-top:5px;letter-spacing:.01em}
+    .pc-stock.in{color:#4ade80}
+    .pc-stock.low{color:#fbbf24}
+    .pc-stock.out{color:#f87171}
 
     /* ── Science ───────────────────────────── */
     .sci-wrap{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -661,9 +666,9 @@
       <!-- METABOLIC -->
       <div class="pc" data-cat="metabolic"><div class="pc-img"><span class="pc-bdg bdg-new">Popular</span><img src="images/semaglutide.png" alt="Semaglutide"></div><div class="pc-body"><div class="pc-name">Semaglutide</div><div class="pc-dose">10mg / 20mg</div><div class="pc-desc">GLP-1 receptor agonist studied for metabolic regulation, appetite signaling, and glucose homeostasis. Third-party verified, batch-specific COA.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div><div class="pc-price-alt">20mg — $75.00</div></div><div class="pc-acts"><a href="images/coa/sem-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Semaglutide','10mg',60,'images/semaglutide.png')">Add</button></div></div></div></div>
 
-      <div class="pc" data-cat="metabolic"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/retatrutide.png" alt="Retatrutide"></div><div class="pc-body"><div class="pc-name">Retatrutide</div><div class="pc-dose">10mg</div><div class="pc-desc">Triple-receptor agonist targeting GLP-1, GIP, and glucagon pathways simultaneously. Next-generation metabolic and energy-balance research compound.</div><div class="pc-foot"><div><div class="pc-price">$95.00</div></div><div class="pc-acts"><a href="images/coa/reta-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Retatrutide','10mg',95,'images/retatrutide.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/retatrutide.png" alt="Retatrutide"></div><div class="pc-body"><div class="pc-name">Retatrutide</div><div class="pc-dose">10mg</div><div class="pc-desc">Triple-receptor agonist targeting GLP-1, GIP, and glucagon pathways simultaneously. Next-generation metabolic and energy-balance research compound.</div><div class="pc-foot"><div><div class="pc-price">$95.00</div><div class="pc-stock" data-stock-badge="Retatrutide__10mg"></div></div><div class="pc-acts"><a href="images/coa/reta-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="Retatrutide__10mg" onclick="addToCart('Retatrutide','10mg',95,'images/retatrutide.png')">Add</button></div></div></div></div>
 
-      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/tirzepatide.png" alt="Tirzepatide"></div><div class="pc-body"><div class="pc-name">Tirzepatide</div><div class="pc-dose">20mg</div><div class="pc-desc">Dual GLP-1/GIP agonist studied for superior metabolic impact on insulin sensitivity, weight regulation, and energy balance.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div></div><div class="pc-acts"><a href="images/coa/tirz-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Tirzepatide','20mg',50,'images/tirzepatide.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/tirzepatide.png" alt="Tirzepatide"></div><div class="pc-body"><div class="pc-name">Tirzepatide</div><div class="pc-dose">20mg</div><div class="pc-desc">Dual GLP-1/GIP agonist studied for superior metabolic impact on insulin sensitivity, weight regulation, and energy balance.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div><div class="pc-stock" data-stock-badge="Tirzepatide__20mg"></div></div><div class="pc-acts"><a href="images/coa/tirz-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="Tirzepatide__20mg" onclick="addToCart('Tirzepatide','20mg',50,'images/tirzepatide.png')">Add</button></div></div></div></div>
 
       <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/slu-pp-332.png" alt="SLU-PP-332"></div><div class="pc-body"><div class="pc-name">SLU-PP-332</div><div class="pc-dose">10mg</div><div class="pc-desc">ERR agonist studied as an exercise mimetic — activates endurance metabolic pathways at the cellular level without physical stimulus.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('SLU-PP-332','10mg',50,'images/slu-pp-332.png')">Add</button></div></div></div></div>
 
@@ -672,7 +677,7 @@
       <div class="pc" data-cat="metabolic"><div class="pc-img"><img src="images/l-carnitine.png" alt="L-Carnitine"></div><div class="pc-body"><div class="pc-name">L-Carnitine</div><div class="pc-dose">1200mg</div><div class="pc-desc">Transports fatty acids into mitochondria for ATP synthesis. Foundational compound for fat oxidation and cellular energy efficiency research.</div><div class="pc-foot"><div><div class="pc-price">$35.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('L-Carnitine','1200mg',35,'images/l-carnitine.png')">Add</button></div></div></div></div>
 
       <!-- RECOVERY -->
-      <div class="pc" data-cat="recovery"><div class="pc-img"><span class="pc-bdg bdg-bun">Bundle</span><img src="images/bpc-157.png" alt="BPC-157 + TB-500"></div><div class="pc-body"><div class="pc-name">BPC-157 + TB-500</div><div class="pc-dose">Bundle · 10mg Each</div><div class="pc-desc">Two leading recovery peptides. BPC-157 targets musculoskeletal and gut repair; TB-500 promotes cell migration and tissue regeneration.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><a href="images/coa/bpc157-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('BPC-157 + TB-500','Bundle · 10mg Each',60,'images/bpc-157.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="recovery"><div class="pc-img"><span class="pc-bdg bdg-bun">Bundle</span><img src="images/bpc-157.png" alt="BPC-157 + TB-500"></div><div class="pc-body"><div class="pc-name">BPC-157 + TB-500</div><div class="pc-dose">Bundle · 10mg Each</div><div class="pc-desc">Two leading recovery peptides. BPC-157 targets musculoskeletal and gut repair; TB-500 promotes cell migration and tissue regeneration.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div><div class="pc-stock" data-stock-badge="BPC-157 + TB-500__Bundle · 10mg Each"></div></div><div class="pc-acts"><a href="images/coa/bpc157-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="BPC-157 + TB-500__Bundle · 10mg Each" onclick="addToCart('BPC-157 + TB-500','Bundle · 10mg Each',60,'images/bpc-157.png')">Add</button></div></div></div></div>
 
       <div class="pc" data-cat="recovery"><div class="pc-img"><img src="images/ara-290.png" alt="ARA-290"></div><div class="pc-body"><div class="pc-name">ARA-290</div><div class="pc-dose">10mg</div><div class="pc-desc">EPO-derived peptide targeting tissue-protective receptors without affecting red blood cell production. Studied for neuroprotection and cellular repair.</div><div class="pc-foot"><div><div class="pc-price">$60.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('ARA-290','10mg',60,'images/ara-290.png')">Add</button></div></div></div></div>
 
@@ -685,9 +690,9 @@
       <!-- GROWTH HORMONE -->
       <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/ipamorelin.png" alt="Ipamorelin"></div><div class="pc-body"><div class="pc-name">Ipamorelin</div><div class="pc-dose">5mg / 10mg</div><div class="pc-desc">Selective ghrelin receptor agonist that stimulates GH release without significantly affecting cortisol or prolactin pathways. High receptor selectivity.</div><div class="pc-foot"><div><div class="pc-price">$35.00</div></div><div class="pc-acts"><a href="images/coa/ipa-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Ipamorelin','5mg',35,'images/ipamorelin.png')">Add</button></div></div></div></div>
 
-      <div class="pc" data-cat="gh"><div class="pc-img"><span class="pc-bdg bdg-bun">Stack</span><img src="images/cjc-1295.png" alt="CJC-1295 + Ipamorelin"></div><div class="pc-body"><div class="pc-name">CJC-1295 + Ipamorelin</div><div class="pc-dose">5mg / 5mg Research Stack</div><div class="pc-desc">Dual-peptide GH-axis stack. CJC-1295 extends GHRH half-life; Ipamorelin amplifies pulsatile GH release through selective receptor activation.</div><div class="pc-foot"><div><div class="pc-price">$55.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('CJC-1295 + Ipamorelin','5mg / 5mg Research Stack',55,'images/cjc-1295.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="gh"><div class="pc-img"><span class="pc-bdg bdg-bun">Stack</span><img src="images/cjc-1295.png" alt="CJC-1295 + Ipamorelin"></div><div class="pc-body"><div class="pc-name">CJC-1295 + Ipamorelin</div><div class="pc-dose">5mg / 5mg Research Stack</div><div class="pc-desc">Dual-peptide GH-axis stack. CJC-1295 extends GHRH half-life; Ipamorelin amplifies pulsatile GH release through selective receptor activation.</div><div class="pc-foot"><div><div class="pc-price">$55.00</div><div class="pc-stock" data-stock-badge="CJC-1295 + Ipamorelin__5mg / 5mg Research Stack"></div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" data-stock-btn="CJC-1295 + Ipamorelin__5mg / 5mg Research Stack" onclick="addToCart('CJC-1295 + Ipamorelin','5mg / 5mg Research Stack',55,'images/cjc-1295.png')">Add</button></div></div></div></div>
 
-      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/tesamorelin.png" alt="Tesamorelin"></div><div class="pc-body"><div class="pc-name">Tesamorelin</div><div class="pc-dose">10mg · 5mg Available</div><div class="pc-desc">Synthetic GHRH analog for physiologically aligned GH release via pituitary activation. Studied for visceral fat and body composition research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><a href="images/coa/tesa-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Tesamorelin','10mg',65,'images/tesamorelin.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/tesamorelin.png" alt="Tesamorelin"></div><div class="pc-body"><div class="pc-name">Tesamorelin</div><div class="pc-dose">10mg · 5mg Available</div><div class="pc-desc">Synthetic GHRH analog for physiologically aligned GH release via pituitary activation. Studied for visceral fat and body composition research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div><div class="pc-stock" data-stock-badge="Tesamorelin__10mg"></div></div><div class="pc-acts"><a href="images/coa/tesa-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="Tesamorelin__10mg" onclick="addToCart('Tesamorelin','10mg',65,'images/tesamorelin.png')">Add</button></div></div></div></div>
 
       <div class="pc" data-cat="gh"><div class="pc-img"><img src="images/igf-1lr3.png" alt="IGF-1 LR3"></div><div class="pc-body"><div class="pc-name">IGF-1 LR3</div><div class="pc-dose">1mg</div><div class="pc-desc">Long-acting IGF-1 analog with extended half-life. Studied for cell proliferation, nutrient partitioning, and regenerative processes at the growth factor level.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('IGF-1 LR3','1mg',65,'images/igf-1lr3.png')">Add</button></div></div></div></div>
 
@@ -705,7 +710,7 @@
       <div class="pc" data-cat="cognitive"><div class="pc-img"><img src="images/oxytocin.png" alt="Oxytocin"></div><div class="pc-body"><div class="pc-name">Oxytocin</div><div class="pc-dose">5mg</div><div class="pc-desc">Endogenous neuropeptide governing social bonding, trust signaling, and stress modulation. Studied for neurological and behavioral pathway research.</div><div class="pc-foot"><div><div class="pc-price">$30.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Oxytocin','5mg',30,'images/oxytocin.png')">Add</button></div></div></div></div>
 
       <!-- LONGEVITY -->
-      <div class="pc" data-cat="longevity"><div class="pc-img"><img src="images/nad-plus.png" alt="NAD+"></div><div class="pc-body"><div class="pc-name">NAD+</div><div class="pc-dose">500mg</div><div class="pc-desc">Master coenzyme essential for mitochondrial function, DNA repair, and sirtuin activation. Central compound in longevity and metabolic health research.</div><div class="pc-foot"><div><div class="pc-price">$100.00</div></div><div class="pc-acts"><a href="images/coa/nad-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('NAD+','500mg',100,'images/nad-plus.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="longevity"><div class="pc-img"><img src="images/nad-plus.png" alt="NAD+"></div><div class="pc-body"><div class="pc-name">NAD+</div><div class="pc-dose">500mg</div><div class="pc-desc">Master coenzyme essential for mitochondrial function, DNA repair, and sirtuin activation. Central compound in longevity and metabolic health research.</div><div class="pc-foot"><div><div class="pc-price">$100.00</div><div class="pc-stock" data-stock-badge="NAD+__500mg"></div></div><div class="pc-acts"><a href="images/coa/nad-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="NAD+__500mg" onclick="addToCart('NAD+','500mg',100,'images/nad-plus.png')">Add</button></div></div></div></div>
 
       <div class="pc" data-cat="longevity"><div class="pc-img"><img src="images/thymosin-alpha1.png" alt="Thymosin Alpha-1"></div><div class="pc-body"><div class="pc-name">Thymosin Alpha-1</div><div class="pc-dose">10mg</div><div class="pc-desc">Thymus-derived immunomodulatory peptide studied for T-cell activation, antiviral response, and immune system regulation. Well-documented mechanism.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=Thymosin Alpha-1 Inquiry'">Inquire</button></div></div></div></div>
 
@@ -716,7 +721,7 @@
 
       <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/pt-141.png" alt="PT-141"></div><div class="pc-body"><div class="pc-name">PT-141</div><div class="pc-dose">10mg · Bremelanotide</div><div class="pc-desc">Melanocortin receptor agonist acting through the CNS. Studied for neurological arousal and sexual health signaling distinct from vascular pathways.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('PT-141','10mg',40,'images/pt-141.png')">Add</button></div></div></div></div>
 
-      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/melanotan-2.png" alt="Melanotan II"></div><div class="pc-body"><div class="pc-name">Melanotan II</div><div class="pc-dose">10mg</div><div class="pc-desc">Synthetic melanocortin analog studied for melanogenesis via MC1R activation and broader neurological pathway influence.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Melanotan II','10mg',40,'images/melanotan-2.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="hormonal"><div class="pc-img"><img src="images/melanotan-2.png" alt="Melanotan II"></div><div class="pc-body"><div class="pc-name">Melanotan II</div><div class="pc-dose">10mg</div><div class="pc-desc">Synthetic melanocortin analog studied for melanogenesis via MC1R activation and broader neurological pathway influence.</div><div class="pc-foot"><div><div class="pc-price">$40.00</div><div class="pc-stock" data-stock-badge="Melanotan II__10mg"></div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" data-stock-btn="Melanotan II__10mg" onclick="addToCart('Melanotan II','10mg',40,'images/melanotan-2.png')">Add</button></div></div></div></div>
 
       <!-- BLENDS -->
       <div class="pc" data-cat="blend"><div class="pc-img"><span class="pc-bdg bdg-bun">Blend</span><img src="images/glow-blend.png" alt="Glow Blend"></div><div class="pc-body"><div class="pc-name">Glow Blend</div><div class="pc-dose">20/5/5 Formulation</div><div class="pc-desc">Precision peptide combination targeting collagen synthesis, skin hydration, and oxidative stress reduction for cellular-level skin research.</div><div class="pc-foot"><div><div class="pc-price">$65.00</div></div><div class="pc-acts"><a href="images/coa/glow-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="addToCart('Glow Blend','20/5/5 Formulation',65,'images/glow-blend.png')">Add</button></div></div></div></div>
@@ -724,14 +729,14 @@
       <div class="pc" data-cat="blend"><div class="pc-img"><span class="pc-bdg bdg-bun">Premium</span><img src="images/performance-blend.png" alt="Performance Blend"></div><div class="pc-body"><div class="pc-name">Performance Blend</div><div class="pc-dose">Advanced Formulation</div><div class="pc-desc">Multi-compound stack for metabolic activity, energy balance, and systemic physiological optimization at the cellular level.</div><div class="pc-foot"><div><div class="pc-price">$140.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('Performance Blend','Advanced Formulation',140,'images/performance-blend.png')">Add</button></div></div></div></div>
 
       <!-- NEW: GHK-Cu, KLOW, MOTS-c -->
-      <div class="pc" data-cat="recovery"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/ghk-cu.png" alt="GHK-Cu"></div><div class="pc-body"><div class="pc-name">GHK-Cu</div><div class="pc-dose">100mg</div><div class="pc-desc">Copper-binding tripeptide studied for wound healing, collagen synthesis, anti-inflammatory signaling, and tissue regeneration across multiple biological systems.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><a href="images/coa/ghk-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=GHK-Cu Inquiry'">Inquire</button></div></div></div></div>
+      <div class="pc" data-cat="recovery"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/ghk-cu.png" alt="GHK-Cu"></div><div class="pc-body"><div class="pc-name">GHK-Cu</div><div class="pc-dose">100mg</div><div class="pc-desc">Copper-binding tripeptide studied for wound healing, collagen synthesis, anti-inflammatory signaling, and tissue regeneration across multiple biological systems.</div><div class="pc-foot"><div><div class="pc-price">$50.00</div><div class="pc-stock" data-stock-badge="GHK-Cu__100mg"></div></div><div class="pc-acts"><a href="images/coa/ghk-coa.png" target="_blank" class="bc">COA</a><button class="ba" data-stock-btn="GHK-Cu__100mg" onclick="addToCart('GHK-Cu','100mg',50,'images/ghk-cu.png')">Add</button></div></div></div></div>
 
       <div class="pc" data-cat="blend"><div class="pc-img"><span class="pc-bdg bdg-bun">Blend</span><img src="images/klow.png" alt="KLOW Blend"></div><div class="pc-body"><div class="pc-name">KLOW Blend</div><div class="pc-dose">BPC-157 · TB-500 · GHK-Cu · KPV</div><div class="pc-desc">Quad-peptide recovery blend. BPC-157 and TB-500 for tissue repair; GHK-Cu for collagen and regeneration; KPV for targeted anti-inflammatory modulation.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><a href="images/coa/klow-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=KLOW Blend Inquiry'">Inquire</button></div></div></div></div>
 
       <div class="pc" data-cat="longevity"><div class="pc-img"><span class="pc-bdg bdg-new">New</span><img src="images/mots-c.png" alt="MOTS-c"></div><div class="pc-body"><div class="pc-name">MOTS-c</div><div class="pc-dose">10mg</div><div class="pc-desc">Mitochondrial-derived peptide encoded in mitochondrial DNA. Studied for metabolic regulation, AMPK activation, and cellular stress response pathways.</div><div class="pc-foot"><div><div class="pc-price">Contact for Price</div></div><div class="pc-acts"><a href="images/coa/motsc-coa.png" target="_blank" class="bc">COA</a><button class="ba" onclick="window.location='mailto:info@titanbiolabs.com?subject=MOTS-c Inquiry'">Inquire</button></div></div></div></div>
 
       <!-- ACCESSORIES -->
-      <div class="pc" data-cat="accessory"><div class="pc-img"><img src="images/bac-water.png" alt="BAC Water"></div><div class="pc-body"><div class="pc-name">BAC Water</div><div class="pc-dose">10ml Sterile Vial</div><div class="pc-desc">Bacteriostatic water with 0.9% benzyl alcohol — the standard reconstitution solution for lyophilized peptides. Sterile and multi-dose safe.</div><div class="pc-foot"><div><div class="pc-price">$15.00</div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" onclick="addToCart('BAC Water','10ml Sterile Vial',15,'images/bac-water.png')">Add</button></div></div></div></div>
+      <div class="pc" data-cat="accessory"><div class="pc-img"><img src="images/bac-water.png" alt="BAC Water"></div><div class="pc-body"><div class="pc-name">BAC Water</div><div class="pc-dose">10ml Sterile Vial</div><div class="pc-desc">Bacteriostatic water with 0.9% benzyl alcohol — the standard reconstitution solution for lyophilized peptides. Sterile and multi-dose safe.</div><div class="pc-foot"><div><div class="pc-price">$15.00</div><div class="pc-stock" data-stock-badge="BAC Water__10ml Sterile Vial"></div></div><div class="pc-acts"><button class="bc">COA</button><button class="ba" data-stock-btn="BAC Water__10ml Sterile Vial" onclick="addToCart('BAC Water','10ml Sterile Vial',15,'images/bac-water.png')">Add</button></div></div></div></div>
 
     </div>
   </div>
@@ -880,6 +885,22 @@
   /* ── Cart system ───────────── */
   const CART_KEY='titan_cart';
 
+  /* Stock on hand from the last confirmed shipment/reconciliation.
+     There's no backend — this number is only as current as the last
+     time it was edited here. Update it whenever an order is confirmed. */
+  const PRODUCT_STOCK={
+    'BPC-157 + TB-500__Bundle · 10mg Each':20,
+    'Retatrutide__10mg':10,
+    'NAD+__500mg':10,
+    'BAC Water__10ml Sterile Vial':40,
+    'CJC-1295 + Ipamorelin__5mg / 5mg Research Stack':10,
+    'Tirzepatide__20mg':10,
+    'Tesamorelin__10mg':10,
+    'Melanotan II__10mg':10,
+    'GHK-Cu__100mg':20
+  };
+  const LOW_STOCK_THRESHOLD=5;
+
   function getCart(){
     try{return JSON.parse(localStorage.getItem(CART_KEY)||'[]')}catch(e){return[]}
   }
@@ -896,12 +917,37 @@
     el.style.display=total>0?'flex':'none';
   }
   function addToCart(name,dose,price,img){
-    const cart=getCart();
     const key=name+'__'+dose;
+    const stock=PRODUCT_STOCK[key];
+    const cart=getCart();
     const existing=cart.find(i=>i.key===key);
-    if(existing){existing.qty++}else{cart.push({key,name,dose,price,img,qty:1})}
+    const currentQty=existing?existing.qty:0;
+    if(stock!==undefined && currentQty>=stock){
+      showToast('Only '+stock+' in stock — that\'s already in your cart');
+      return;
+    }
+    if(existing){existing.qty++;existing.stock=stock}else{cart.push({key,name,dose,price,img,qty:1,stock})}
     saveCart(cart);
     showToast(name+' added to cart');
+    renderStock();
+  }
+  function renderStock(){
+    const cart=getCart();
+    Object.keys(PRODUCT_STOCK).forEach(function(key){
+      const total=PRODUCT_STOCK[key];
+      const inCart=(cart.find(function(i){return i.key===key})||{qty:0}).qty;
+      const remaining=Math.max(0,total-inCart);
+      const badge=document.querySelector('[data-stock-badge="'+CSS.escape(key)+'"]');
+      const btn=document.querySelector('[data-stock-btn="'+CSS.escape(key)+'"]');
+      if(badge){
+        badge.className='pc-stock '+(remaining<=0?'out':remaining<=LOW_STOCK_THRESHOLD?'low':'in');
+        badge.textContent=remaining<=0?'Sold out':remaining<=LOW_STOCK_THRESHOLD?'Only '+remaining+' left':remaining+' in stock';
+      }
+      if(btn){
+        btn.disabled=remaining<=0;
+        btn.textContent=remaining<=0?'Sold Out':'Add';
+      }
+    });
   }
   function showToast(msg){
     const t=document.getElementById('toast');
@@ -911,8 +957,9 @@
     t._timer=setTimeout(()=>t.classList.remove('show'),2400);
   }
 
-  /* Init badge on load */
+  /* Init badge and stock display on load */
   updateCartBadge();
+  renderStock();
 </script>
 </body>
 </html>

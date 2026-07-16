@@ -121,6 +121,7 @@
     .cr-name{font-size:14px;font-weight:600;color:#fff;line-height:1.2}
     .cr-dose{font-size:12px;color:#93c5fd;margin-top:3px}
     .cr-unit{font-size:11px;color:var(--muted);margin-top:4px}
+    .cr-qty-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
     .cr-qty{
       display:flex;align-items:center;gap:0;
       border:1px solid var(--border);border-radius:var(--r);
@@ -134,6 +135,13 @@
       transition:var(--t);
     }
     .qty-btn:hover{background:var(--border);color:var(--text)}
+    .qty-btn:disabled{cursor:not-allowed;opacity:.35}
+    .qty-btn:disabled:hover{background:none;color:var(--muted-lt)}
+    .cr-stock-note{
+      margin-top:4px;
+      text-align:center;font-size:10px;font-weight:600;color:#fbbf24;
+      white-space:nowrap;
+    }
     .qty-val{
       min-width:32px;text-align:center;
       font-size:13px;font-weight:600;color:#fff;
@@ -418,7 +426,8 @@
     const cart = getCart();
     const item = cart.find(i => i.key === key);
     if (!item) return;
-    item.qty = Math.max(1, item.qty + delta);
+    const max = (typeof item.stock === 'number') ? item.stock : Infinity;
+    item.qty = Math.min(max, Math.max(1, item.qty + delta));
     saveCart(cart);
   }
 
@@ -499,10 +508,13 @@
           <div class="cr-dose">${escHtml(item.dose)}</div>
           <div class="cr-unit">${fmt(item.price)} each</div>
         </div>
-        <div class="cr-qty">
-          <button class="qty-btn" onclick="changeQty('${escAttr(item.key)}',-1)">−</button>
-          <div class="qty-val">${item.qty}</div>
-          <button class="qty-btn" onclick="changeQty('${escAttr(item.key)}',1)">+</button>
+        <div class="cr-qty-wrap">
+          <div class="cr-qty">
+            <button class="qty-btn" onclick="changeQty('${escAttr(item.key)}',-1)">−</button>
+            <div class="qty-val">${item.qty}</div>
+            <button class="qty-btn" ${typeof item.stock === 'number' && item.qty >= item.stock ? 'disabled' : ''} onclick="changeQty('${escAttr(item.key)}',1)">+</button>
+          </div>
+          ${typeof item.stock === 'number' && item.qty >= item.stock ? '<div class="cr-stock-note">Max in stock</div>' : ''}
         </div>
         <div class="cr-total">${fmt(item.price * item.qty)}</div>
         <button class="cr-remove" onclick="removeItem('${escAttr(item.key)}')" title="Remove">
